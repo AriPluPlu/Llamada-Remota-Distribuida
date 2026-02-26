@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 <h1 align="center">🚗 Sistema de Renta de Autos con RMI (Pyro) 🚗</h1>
 
@@ -62,3 +63,7 @@ Implementa un sistema de renta de autos para el mes de marzo usando llamadas RPC
   ```bash
   pip install Pyro5
   ```
+=======
+# Llamada-Remota-Distribuida
+Llamadas RCP y RMI, esta llamada es RMI con Pyro5 de Python, es de la clase "Computo paralelo y distribuido" 8°Semestre
+>>>>>>> dee7ad6e95769935dd57b38ddb9b72227ccb372c
