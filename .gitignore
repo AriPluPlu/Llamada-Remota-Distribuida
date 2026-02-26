@@ -1,9 +1,0 @@
-# Ignorar la carpeta entorno_dist que contiene los archivos compilados de Pyro4
-entorno_dist/
-
-# Ignorar una carpeta de configuraciones específicas
-/config/secrets/
-
-# Ignorar archivos temporales
-.DS_Store
-*.tmp
