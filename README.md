@@ -63,7 +63,18 @@ Implementa un sistema de renta de autos para el mes de marzo usando llamadas RPC
   ```bash
   pip install Pyro5
   ```
+5. **Instalar Custom TKinter:**
+  ```bash
+  pip install customtkinter
+  ```
+6. **Instalar PILLOW:**
+  ```bash
+    pip install Pillow 
+  ```
+# Prototipo de Interfaz
+Este prototipo es rápido realizado en figma, no es lo ideal de una interfaz pero funciona para la entrega.
+![prototipo interfaz realizado en figma](images/prototipoInterfaz.png)
+
 =======
 # Llamada-Remota-Distribuida
 Llamadas RCP y RMI, esta llamada es RMI con Pyro5 de Python, es de la clase "Computo paralelo y distribuido" 8°Semestre
->>>>>>> dee7ad6e95769935dd57b38ddb9b72227ccb372c

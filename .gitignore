@@ -1,8 +1,21 @@
 # Ignorar la carpeta entorno_dist que contiene los archivos compilados de Pyro4
 entorno_dist/
+#ignorar la carpeta de logs
+/logs/
+#ignorar la carpeta de configuraciones específicas
+/config/
+#ignorar colores degradado.png
+colores_degradado.png
 
 # Ignorar una carpeta de configuraciones específicas
 /config/secrets/
+
+#ignorar archivos de configuración de Pyro4
+*.pyc
+__pycache__/
+
+#ignorar cliente.py
+cliente.py
 
 # Ignorar archivos temporales
 .DS_Store

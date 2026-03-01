@@ -9,7 +9,6 @@ import Pyro5.api
 
 #object es la clase de Python que se hereda para crear una clase nueva, en este caso SistemaRentaAutos
 class SistemaRentaAutos(object):
-
 #definimos el constructor de la clase
     def __init__(self):#self es una referencia a la instancia actual de la clase, se utiliza para acceder a las variables y métodos de la clase
         # unidades disponibles de cada tipo de vehículo
@@ -33,39 +32,44 @@ class SistemaRentaAutos(object):
         # 1. Verificar si existe el vehículo con su nombre
         if tipo_vehiculo not in self.catalogo:
             return f"[{usuario}] , El vehículo no se ha encontrado."
-        #si esta,obtenemos la información del vehículo del catálogo
+            
+        # si esta, obtenemos la información del vehículo del catálogo
         vehiculo = self.catalogo[tipo_vehiculo]
         
-        #Verificar cupo
+        # Verificar cupo
         if ocupantes > vehiculo["cupo"]:
-            return f"[{usuario}], El cupo máximo para {vehiculo['nombre']} es de {vehiculo['cupo']} personas, ya se exedío."
+            return f"[{usuario}], El cupo máximo para {vehiculo['nombre']} es de {vehiculo['cupo']} personas, ya se excedió."
             
-        #Verificar disponibilidad de días 
-        #.lower() convierte el string a minúsculas para evitar problemas de comparación
-        if tipo_vehiculo == "cam_4puertas" and dia_semana.lower() == "lunes":
-            return f"[{usuario}] , Lo sentimos, pero la {vehiculo['nombre']} no se renta los lunes."
+        # --- NUEVA VALIDACIÓN DE DÍAS EXACTOS ---
+        # Convertimos el texto "domingo, lunes" en una lista quitando espacios y poniendo minúsculas
+        lista_dias = [dia.strip().lower() for dia in dia_semana.split(',')]
+        
+        # Validar que la cantidad de días de renta coincida con los días ingresados
+        if len(lista_dias) != dias:
+            return f"[{usuario}] , Error: Pediste rentar por {dias} días, pero ingresaste {len(lista_dias)} días ({dia_semana}). Deben coincidir."
             
-        #Verificar inventario
+        # Verificar disponibilidad de días para la camioneta 4 puertas
+        if tipo_vehiculo == "cam_4puertas" and "lunes" in lista_dias:
+            return f"[{usuario}] , Lo sentimos, pero la {vehiculo['nombre']} no se puede rentar ni usar los lunes. (Días solicitados: {dia_semana})"
+        # ----------------------------------------
+            
+        # Verificar inventario
         if self.unidades[tipo_vehiculo] <= 0:
             return f"[{usuario}], Lo sentimos pero no hay unidades disponibles de {vehiculo['nombre']}."
 
-        #verificar que el usuario no exceda el límite de 3 rentas simultáneas
-        #get es un método de los diccionarios que devuelve el valor asociado a una clave, o un valor predeterminado si la clave no existe
-        #entonces obtenemos el número actual de rentas del usuario, si no existe se devuelve 0
+        # verificar que el usuario no exceda el límite de 3 rentas simultáneas
         rentas_actuales = self.rentas_usuario.get(usuario, 0)
         if rentas_actuales >= 3:
             return f"[{usuario}] , Que mal, has alcanzado el límite de 3 rentas simultáneas."
-        #si aun no alcanzado el límite, incrementamos su contador de rentas
+            
+        # si aun no ha alcanzado el límite, incrementamos su contador de rentas
         self.rentas_usuario[usuario] = rentas_actuales + 1
 
-        
-        #Confirmar renta y descontar inventario
-        #restamos una unidad del tipo de vehículo solicitado
+        # Confirmar renta y descontar inventario
         self.unidades[tipo_vehiculo] -= 1
-        #Calculamos el monto total a pagar  
         monto_total = vehiculo["costo"] * dias
-        return f"[{usuario}] , La renta de {vehiculo['nombre']} ha sido confirmada por {dias} días.\n Con un total a pagar de: ${monto_total}."
-
+        
+        return f"[{usuario}] , La renta de {vehiculo['nombre']} ha sido confirmada por {dias} días ({dia_semana}).\n Con un total a pagar de: ${monto_total}."
 # Configuración del servidor Pyro
 def iniciar_servidor():
     # Creamos un daemon de Pyro

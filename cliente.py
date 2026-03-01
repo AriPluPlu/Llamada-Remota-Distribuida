@@ -4,7 +4,7 @@ import Pyro5.api
 #función que simula a los 3 clienets
 def simular_clientes():
     #Ejecutamos el cliente y solicitamos la URI del servidor para conectarnos
-    uri_servidor ="PYRO:obj_5cffbbf20bf64a14abe0c7d5c00269c6@localhost:33483"
+    uri_servidor ="PYRO:obj_38a380b502124dceb96351cac5109b2a@localhost:37469"
     
     # Nos conectamos al objeto remoto
     #renta_autos es lo que nos permite llamar a los métodos del servidor como si fueran locales
@@ -19,28 +19,34 @@ def simular_clientes():
     for key, val in catalogo.items():
         print(f"{val['nombre']} | Cupo: {val['cupo']} | Costo: ${val['costo']}por día | Disp: {val['dias_disp']}")
     
-    print("\n========== ENVIAR SOLICITUDES DE 3 USUARIOS ==========")
-    # Caso 1
-    res1 = renta_autos.solicitar_renta("Usuario 1", "auto_4puertas", 3, 4, "martes")
-    print(res1)
-    res1 = renta_autos.solicitar_renta("Usuario 1", "auto_4puertas", 3, 4, "martes")
-    print(res1)
-    res1 = renta_autos.solicitar_renta("Usuario 1", "auto_4puertas", 3, 4, "martes")
-    print(res1)
-    res1 = renta_autos.solicitar_renta("Usuario 1", "auto_4puertas", 3, 4, "martes")
-    print(res1)
-    
-    #Intenta rentar Camioneta de 4 puertas en Lunes (Debe fallar)
-    res2 = renta_autos.solicitar_renta("Usuario 2", "cam_4puertas", 4, 2, "lunes")
-    print(res2)
-    
-    # Intenta meter 12 personas en Camioneta 3 puertas (Excede cupo)
-    res3 = renta_autos.solicitar_renta("Usuario 3", "cam_3puertas", 12, 5, "viernes")
-    print(res3)
-
-    # Usuario 2 hace un segundo intento correcto (Pueden rentar hasta 3 vehículos)
-    res4 = renta_autos.solicitar_renta("Usuario 2", "cam_4puertas", 4, 2, "miercoles")
-    print(res4)
+    while True:
+        print("\n========== NUEVA SOLICITUD DE RENTA ==========")
+        usuario = input("Ingresa tu nombre (o escribe 'salir' para terminar): ")
+        
+        # Condición para romper el ciclo y cerrar el cliente
+        if usuario.lower() == 'salir':
+            print("Cerrando el sistema de rentas. ¡Hasta luego!")
+            break
+            
+        tipo_vehiculo = input("Ingresa la clave del tipo de auto (auto_4puertas, cam_4puertas, cam_3puertas): ")
+        
+        # Usamos un try-except por si el usuario escribe letras en lugar de números
+        try:
+            ocupantes = int(input("Ingresa el número de ocupantes: "))
+            dias = int(input("Ingresa los días de renta: "))
+        except ValueError:
+            print("\n[ERROR] Por favor, ingresa solo números para los ocupantes y los días. Intenta de nuevo.")
+            continue # Regresa al inicio del ciclo
+            
+        dia_semana = input("Ingresa los días de la semana (ej. Lunes, Martes): ")
+        
+        # Hacemos la llamada remota al servidor con los datos que ingresó el usuario
+        print("\nEnviando solicitud al servidor...")
+        respuesta = renta_autos.solicitar_renta(usuario, tipo_vehiculo, ocupantes, dias, dia_semana)
+        
+        # Imprimimos lo que nos contestó el servidor
+        print(">>> RESPUESTA DEL SERVIDOR:")
+        print(respuesta)
 
 if __name__ == "__main__":
     simular_clientes()
