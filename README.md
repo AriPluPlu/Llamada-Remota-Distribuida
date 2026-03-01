@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 <h1 align="center">🚗 Sistema de Renta de Autos con RMI (Pyro) 🚗</h1>
 
