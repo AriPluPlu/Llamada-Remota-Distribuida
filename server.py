@@ -72,10 +72,15 @@ class SistemaRentaAutos(object):
         return f"[{usuario}] , La renta de {vehiculo['nombre']} ha sido confirmada por {dias} días ({dia_semana}).\n Con un total a pagar de: ${monto_total}."
 # Configuración del servidor Pyro
 def iniciar_servidor():
+    #para escuchar en una IP específica, primero obtenemos la IP de la máquina donde se ejecutará el servidor, por ejemplo "
+    mi_ip = "192.168.1.70" 
+    
+    # 2. Le decimos al Daemon que escuche en esa IP en lugar de localhost
+    daemon = Pyro5.api.Daemon(host=mi_ip)
     # Creamos un daemon de Pyro
     #es importante por que escucha las solicitudes entrantes
     #y las dirige al objeto registrado
-    daemon = Pyro5.api.Daemon()          
+    #daemon = Pyro5.api.Daemon()          
     #uri es la dirección que los clientes usarán para conectarse al servidor  
     #registramos la clase SistemaRentaAutos en el daemon y obtenemos su URI
     # funciona como un ID del objeto remoto, permitiendo a los clientes localizarlo y comunicarse con él 
